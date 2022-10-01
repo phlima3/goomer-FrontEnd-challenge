@@ -10,8 +10,8 @@ const breakpoints = {
 
 const fonts = {
   ...chakraTheme.fonts,
-  body: `'DM Sans', sans-serif`,
-  heading: `'DM Sans', sans-serif`,
+  body: `'Montserrat', sans-serif`,
+  heading: `'Montserrat', sans-serif`,
 };
 
 const colors = {

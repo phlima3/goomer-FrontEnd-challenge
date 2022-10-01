@@ -6,7 +6,7 @@ import { App } from "./App";
 
 import { newTheme } from "./theme";
 
-import "@fontsource/open-sans";
+import "@fontsource/montserrat";
 import { mirageServer } from "./mirage";
 
 if (process.env.NODE_ENV === "development") {
