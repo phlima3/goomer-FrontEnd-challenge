@@ -15,7 +15,7 @@ export function mirageServer() {
             hours: [
               {
                 from: "19:00",
-                to: "23:00",
+                to: "01:00",
                 days: [1, 5],
               },
             ],

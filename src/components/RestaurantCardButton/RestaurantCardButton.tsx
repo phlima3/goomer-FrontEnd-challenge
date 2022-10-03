@@ -1,4 +1,5 @@
 import { Button, Circle, Flex, Image, Text } from "@chakra-ui/react";
+import moment from "moment";
 import { useEffect, useState } from "react";
 import { Restaurant } from "../../interfaces/interface.restaurant";
 
@@ -8,26 +9,59 @@ interface RestaurantProps {
 
 export const RestaurantCardButton = ({ data }: RestaurantProps) => {
   const [days, setDays] = useState([]);
+  const [today, setToday] = useState(0);
+  const momentToday = moment().format("dddd").toString().toLowerCase();
+
+  switch (momentToday) {
+    case "sunday":
+      return setToday(1);
+      break;
+    case "monday":
+      return setToday(2);
+      break;
+    case "tuesday":
+      return setToday(3);
+      break;
+    case "wednesday":
+      return setToday(4);
+      break;
+    case "thursday":
+      return setToday(5);
+      break;
+    case "friday":
+      return setToday(6);
+      break;
+    case "saturday":
+      return setToday(7);
+      break;
+    default:
+      setToday(0);
+  }
+  console.log(today);
 
   function verifyData() {
-    const date = new Date();
-
-    const Days = data.hours.map((day: any) => {
+    const dataDays = data.hours.map((day: any) => {
       return day.days;
     });
-    Days.map((day: any) => {
-      setDays(day);
+    dataDays.map((arr) => {
+      const arrDays = arr.values();
+
+      for (let day of arrDays) {
+        setDays(day);
+      }
     });
 
-    /*     console.log(days);
-    if (days.includes(date.getDay())) {
-      return console.log(true);
-    } else false; */
+    /*     if(today === days.toString()) {
+      console.log('é hoje')
+    }else {
+      console.log('não é hoje')
+    } */
   }
-  /*   useEffect(() => {
-    verifyData(data);
-  }, [data]);
- */
+
+  useEffect(() => {
+    verifyData();
+  }, []);
+
   return (
     <Button
       w="100%"
