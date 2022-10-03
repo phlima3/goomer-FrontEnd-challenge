@@ -10,7 +10,7 @@ import {
 } from "@chakra-ui/react";
 import axios from "axios";
 import { useEffect, useState } from "react";
-import { Button } from "../../components/Button";
+
 import { Header } from "../../components/Header";
 import { Search } from "../../components/Icons/Search";
 import { RestaurantCardButton } from "../../components/RestaurantCardButton/RestaurantCardButton";

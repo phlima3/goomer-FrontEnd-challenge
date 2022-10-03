@@ -1,4 +1,5 @@
 import { Button, Circle, Flex, Image, Text } from "@chakra-ui/react";
+import { useEffect, useState } from "react";
 import { Restaurant } from "../../interfaces/interface.restaurant";
 
 interface RestaurantProps {
@@ -6,6 +7,27 @@ interface RestaurantProps {
 }
 
 export const RestaurantCardButton = ({ data }: RestaurantProps) => {
+  const [days, setDays] = useState([]);
+
+  function verifyData() {
+    const date = new Date();
+
+    const Days = data.hours.map((day: any) => {
+      return day.days;
+    });
+    Days.map((day: any) => {
+      setDays(day);
+    });
+
+    /*     console.log(days);
+    if (days.includes(date.getDay())) {
+      return console.log(true);
+    } else false; */
+  }
+  /*   useEffect(() => {
+    verifyData(data);
+  }, [data]);
+ */
   return (
     <Button
       w="100%"
