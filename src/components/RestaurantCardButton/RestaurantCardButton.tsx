@@ -1,66 +1,54 @@
+//@ts-nocheck
 import { Button, Circle, Flex, Image, Text } from "@chakra-ui/react";
 import moment from "moment";
 import { useEffect, useState } from "react";
-import { Restaurant } from "../../interfaces/interface.restaurant";
+import { Hour, Restaurant } from "../../interfaces/interface.restaurant";
 
 interface RestaurantProps {
   data: Restaurant;
+  hours: number[];
 }
 
-export const RestaurantCardButton = ({ data }: RestaurantProps) => {
-  const [days, setDays] = useState([]);
+export const RestaurantCardButton = ({ data, hours }: RestaurantProps) => {
   const [today, setToday] = useState(0);
+  const [valid, setValid] = useState([]);
   const momentToday = moment().format("dddd").toString().toLowerCase();
 
-  switch (momentToday) {
-    case "sunday":
-      return setToday(1);
-      break;
-    case "monday":
-      return setToday(2);
-      break;
-    case "tuesday":
-      return setToday(3);
-      break;
-    case "wednesday":
-      return setToday(4);
-      break;
-    case "thursday":
-      return setToday(5);
-      break;
-    case "friday":
-      return setToday(6);
-      break;
-    case "saturday":
-      return setToday(7);
-      break;
-    default:
-      setToday(0);
-  }
-  console.log(today);
-
-  function verifyData() {
-    const dataDays = data.hours.map((day: any) => {
-      return day.days;
-    });
-    dataDays.map((arr) => {
-      const arrDays = arr.values();
-
-      for (let day of arrDays) {
-        setDays(day);
-      }
-    });
-
-    /*     if(today === days.toString()) {
-      console.log('é hoje')
-    }else {
-      console.log('não é hoje')
-    } */
-  }
-
   useEffect(() => {
-    verifyData();
+    switch (momentToday) {
+      case "sunday":
+        setToday(1);
+        break;
+      case "monday":
+        setToday(2);
+        break;
+      case "tuesday":
+        setToday(3);
+        break;
+      case "wednesday":
+        setToday(4);
+        break;
+      case "thursday":
+        setToday(5);
+        break;
+      case "friday":
+        setToday(6);
+        break;
+      case "saturday":
+        setToday(7);
+        break;
+      default:
+        setToday(0);
+    }
+    const openHours = hours.flatMap((hour) => hour);
+    setValid(openHours);
   }, []);
+
+  const verifyValid = () => {
+    if (valid.includes(today)) {
+      return true;
+    } else false;
+  };
 
   return (
     <Button
@@ -74,18 +62,31 @@ export const RestaurantCardButton = ({ data }: RestaurantProps) => {
     >
       <Circle
         bg="background.tertiary.500"
+        bg={
+          verifyValid()
+            ? "background.tertiary.500"
+            : "background.quaternary.500"
+        }
         size="48px"
         position="absolute"
         top="-5"
         right="-5"
       >
         <Flex align="center" justify="center" direction="column">
-          <Text fontSize={8} color="white">
-            Aberto
-          </Text>
-          <Text fontSize={8} color="white">
-            agora
-          </Text>
+          {verifyValid() ? (
+            <>
+              <Text fontSize={8} color="white">
+                Aberto
+              </Text>
+              <Text fontSize={8} color="white">
+                agora
+              </Text>
+            </>
+          ) : (
+            <Text fontSize={8} color="white">
+              Fechado
+            </Text>
+          )}
         </Flex>
       </Circle>
       <Flex w="100%" align="center" justify="between" textAlign="center">

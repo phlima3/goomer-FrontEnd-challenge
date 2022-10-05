@@ -8,8 +8,6 @@ import {
   InputRightElement,
   Text,
 } from "@chakra-ui/react";
-import axios from "axios";
-import moment from "moment";
 import { useEffect, useState } from "react";
 
 import { Header } from "../../components/Header";
@@ -19,17 +17,27 @@ import { Restaurant } from "../../interfaces/interface.restaurant";
 import { api } from "../../services/api";
 
 export const Home = () => {
-  const [restaurant, setRestaurant] = useState([]);
+  const [restaurants, setRestaurants] = useState<Restaurant[]>([]);
+  const [search, setSearch] = useState("");
 
-  async function getRestaurants() {
-    const restaurant = await api.get("restaurants").then((res) => {
-      return res.data;
-    });
-    setRestaurant(restaurant);
-  }
   useEffect(() => {
-    getRestaurants();
+    const fetchData = async () => {
+      const data = await api.get("restaurants").then((response) => {
+        return response.data;
+      });
+      setRestaurants(data);
+      return data;
+    };
+
+    fetchData().catch(console.error);
   }, []);
+
+  const filteredRestaurants =
+    search.length > 0
+      ? restaurants.filter((restaurant) =>
+          restaurant.name.toLowerCase().includes(search.toLowerCase())
+        )
+      : [];
 
   return (
     <div>
@@ -46,7 +54,12 @@ export const Home = () => {
           <Text fontSize="24px">Bem-vindo ao Lista Rango</Text>
           <Box w="60%" mt={8}>
             <InputGroup boxShadow="lg" rounded="lg">
-              <Input type="search" placeholder="Buscar estabelecimento" />
+              <Input
+                type="search"
+                placeholder="Buscar estabelecimento"
+                value={search}
+                onChange={(e) => setSearch(e.target.value)}
+              />
               <InputRightElement>
                 <Search />
               </InputRightElement>
@@ -63,16 +76,60 @@ export const Home = () => {
             }}
             gap={8}
           >
-            <>
-              {restaurant.map((restaurant: Restaurant) => {
-                return (
-                  <RestaurantCardButton key={restaurant.id} data={restaurant} />
-                );
-              })}
-            </>
+            {search.length > 0 ? (
+              <>
+                {filteredRestaurants.map((restaurant: Restaurant) => {
+                  const hours = restaurant.hours;
+                  const arrDays = hours.flatMap((hours) => {
+                    return hours.days;
+                  });
+
+                  return (
+                    <RestaurantCardButton
+                      key={restaurant.id}
+                      data={restaurant}
+                      hours={arrDays}
+                    />
+                  );
+                })}
+              </>
+            ) : (
+              <>
+                {restaurants.map((restaurant: Restaurant) => {
+                  const hours = restaurant.hours;
+                  const arrDays = hours.flatMap((hours) => {
+                    return hours.days;
+                  });
+                  return (
+                    <RestaurantCardButton
+                      key={restaurant.id}
+                      data={restaurant}
+                      hours={arrDays}
+                    />
+                  );
+                })}
+              </>
+            )}
           </Grid>
         </Flex>
       </Flex>
     </div>
   );
 };
+/*  {restaurants.map((restaurant: Restaurant) => {
+              const hours = restaurant.hours;
+              const arrDays = hours.map((hours: number) => {
+                return hours.days;
+              });
+              const openHours = arrDays.map((days: number) => {
+                return days;
+              });
+
+              return (
+                <RestaurantCardButton
+                  key={restaurant.id}
+                  data={restaurant}
+                  hours={openHours}
+                />
+              );
+            })} */

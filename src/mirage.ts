@@ -16,7 +16,7 @@ export function mirageServer() {
               {
                 from: "19:00",
                 to: "01:00",
-                days: [1, 5],
+                days: [3, 5],
               },
             ],
           },
